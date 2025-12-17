@@ -8,6 +8,11 @@ This document explains how to build, run, and extend the small Multiboot-compati
 - **Run in QEMU:** `zig build run` boots the kernel headless with serial redirected to your terminal; expect the screen to clear and print status lines to VGA text memory while serial logs appear in stdout.
 - **Format:** `zig fmt src build.zig` keeps Zig sources consistent.
 
+## Environment setup
+1. Download Zig 0.15.2 from the official release page and ensure `zig` is on your PATH.
+2. Install QEMU (tested with `qemu-system-i386`). On Debian/Ubuntu, `sudo apt-get install qemu-system-x86`.
+3. Verify tools: `zig version` should print `0.15.2` and `qemu-system-i386 --version` should succeed.
+
 ## What the kernel does today
 - Provides a **Multiboot v1 header** and 16 KiB boot stack in `src/start.s` so QEMU/GRUB can load the ELF directly with `-kernel`.
 - Sets up **basic VGA text output** (80×25) to report boot progress.
@@ -20,6 +25,12 @@ This document explains how to build, run, and extend the small Multiboot-compati
 - `linker.ld` – Places sections at the 1 MiB physical address and aligns segments for the kernel image.
 - `src/start.s` – Multiboot header plus the `_start` entry that sets the stack and calls into Zig.
 - `src/kernel.zig` – Core kernel logic (VGA/serial routines, early boot banners, panic handler).
+
+## Running the kernel manually
+If you want to bypass the build runner:
+1. Build the kernel: `zig build -p zig-out`.
+2. Boot with QEMU directly: `qemu-system-i386 -kernel zig-out/bin/kernel -serial stdio -no-reboot -no-shutdown -display none`.
+3. You should see VGA messages (if using a display) and serial output in your terminal.
 
 ## Extending the kernel
 - Add new Zig modules under `src/` and import them from `src/kernel.zig` or future subsystem files.
