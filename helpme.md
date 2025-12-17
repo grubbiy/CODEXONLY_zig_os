@@ -41,3 +41,4 @@ If you want to bypass the build runner:
 - **Missing Zig or QEMU:** Install the required tools and re-run `zig build` / `zig build run`.
 - **No serial output:** Ensure QEMU is run with `-serial stdio` (the build script does this) and check your terminal for log lines.
 - **Boot hangs immediately:** Verify Multiboot magic matches (`0x2BADB002`) and that you are using a Multiboot-capable loader (`qemu-system-i386 -kernel zig-out/bin/kernel`).
+
